@@ -1,0 +1,98 @@
+{
+  "metadata": {
+    "version": "Agent_V3_TrajectoryAware",
+    "total": 75,
+    "timestamp": "2026-06-16 17:03:42"
+  },
+  "metrics": {
+    "avg_score": 4.92,
+    "hit_rate": 1.0,
+    "mrr": 0.9911066666666667,
+    "faithfulness": 0.43338666666666675,
+    "relevancy": 0.3270800000000001,
+    "agreement_rate": 1.0,
+    "pass_rate": 1.0,
+    "avg_latency": 0.06090140533347343,
+    "total_tokens": 9610,
+    "estimated_cost_usd": 0.001442,
+    "avg_trajectory_efficiency": 1.0,
+    "avg_step_count": 4.0,
+    "avg_tool_call_count": 1.0,
+    "avg_redundant_tool_call_rate": 0.0,
+    "loop_rate": 0.0
+  },
+  "release_gate": {
+    "decision": "RELEASE",
+    "delta_avg_score": 1.44,
+    "thresholds": {
+      "quality": 3.5,
+      "hit_rate": 0.9,
+      "agreement_rate": 0.75,
+      "max_avg_latency": 0.2,
+      "max_estimated_cost_usd": 0.01,
+      "min_trajectory_efficiency": 0.85,
+      "max_loop_rate": 0.0
+    },
+    "checks": {
+      "quality_not_regressed": true,
+      "quality_threshold": true,
+      "retrieval_threshold": true,
+      "agreement_threshold": true,
+      "latency_threshold": true,
+      "cost_threshold": true,
+      "trajectory_efficiency_threshold": true,
+      "loop_rate_threshold": true
+    }
+  },
+  "regression_comparison": {
+    "baseline": {
+      "metadata": {
+        "version": "Agent_V1_Base",
+        "total": 75,
+        "timestamp": "2026-06-16 17:03:40"
+      },
+      "metrics": {
+        "avg_score": 3.48,
+        "hit_rate": 1.0,
+        "mrr": 0.9911066666666667,
+        "faithfulness": 0.7934133333333339,
+        "relevancy": 0.3687199999999998,
+        "agreement_rate": 0.9133333333333333,
+        "pass_rate": 0.6266666666666667,
+        "avg_latency": 0.06131263199994767,
+        "total_tokens": 10509,
+        "estimated_cost_usd": 0.001576,
+        "avg_trajectory_efficiency": 1.0,
+        "avg_step_count": 4.0,
+        "avg_tool_call_count": 1.0,
+        "avg_redundant_tool_call_rate": 0.0,
+        "loop_rate": 0.0
+      }
+    },
+    "previous_candidate": {
+      "metadata": {
+        "version": "Agent_V2_Optimized",
+        "total": 75,
+        "timestamp": "2026-06-16 17:03:41"
+      },
+      "metrics": {
+        "avg_score": 4.92,
+        "hit_rate": 1.0,
+        "mrr": 0.9911066666666667,
+        "faithfulness": 0.43338666666666675,
+        "relevancy": 0.3270800000000001,
+        "agreement_rate": 1.0,
+        "pass_rate": 1.0,
+        "avg_latency": 0.06090987733351843,
+        "total_tokens": 9610,
+        "estimated_cost_usd": 0.001442,
+        "avg_trajectory_efficiency": 1.0,
+        "avg_step_count": 4.0,
+        "avg_tool_call_count": 1.0,
+        "avg_redundant_tool_call_rate": 0.0,
+        "loop_rate": 0.0
+      }
+    },
+    "candidate": "Agent_V3_TrajectoryAware"
+  }
+}

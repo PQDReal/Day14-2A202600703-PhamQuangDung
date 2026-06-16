@@ -1,4 +1,5 @@
-from typing import List, Dict
+import re
+from typing import Dict, List, Set
 
 class RetrievalEvaluator:
     def __init__(self):
@@ -30,3 +31,45 @@ class RetrievalEvaluator:
         """
         # Placeholder logic
         return {"avg_hit_rate": 0.85, "avg_mrr": 0.72}
+
+
+class ExpertEvaluator:
+    def __init__(self, top_k: int = 3):
+        self.top_k = top_k
+        self.retrieval = RetrievalEvaluator()
+
+    def _tokens(self, text: str) -> Set[str]:
+        return set(re.findall(r"[a-zA-Z0-9_]+", text.lower()))
+
+    def _overlap_score(self, source: str, target: str) -> float:
+        source_tokens = self._tokens(source)
+        target_tokens = self._tokens(target)
+        if not source_tokens:
+            return 0.0
+        return len(source_tokens & target_tokens) / len(source_tokens)
+
+    async def score(self, case: Dict, response: Dict) -> Dict:
+        expected_ids = case.get("expected_retrieval_ids", [])
+        retrieved_ids = response.get("retrieved_ids") or response.get("metadata", {}).get("sources", [])
+        answer = response.get("answer", "")
+        contexts = "\n".join(response.get("contexts", []))
+
+        hit_rate = self.retrieval.calculate_hit_rate(expected_ids, retrieved_ids, self.top_k)
+        mrr = self.retrieval.calculate_mrr(expected_ids, retrieved_ids)
+
+        faithfulness = self._overlap_score(answer, contexts)
+        relevancy = self._overlap_score(case.get("question", ""), answer)
+        completeness = self._overlap_score(case.get("expected_answer", ""), answer)
+
+        return {
+            "faithfulness": round(min(faithfulness, 1.0), 3),
+            "relevancy": round(min(relevancy, 1.0), 3),
+            "completeness": round(min(completeness, 1.0), 3),
+            "retrieval": {
+                "hit_rate": hit_rate,
+                "mrr": round(mrr, 3),
+                "expected_ids": expected_ids,
+                "retrieved_ids": retrieved_ids,
+                "top_k": self.top_k,
+            },
+        }

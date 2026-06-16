@@ -1,13 +1,13 @@
 import asyncio
 import time
 from typing import List, Dict
-# Import other components...
 
 class BenchmarkRunner:
-    def __init__(self, agent, evaluator, judge):
+    def __init__(self, agent, evaluator, judge, trajectory_evaluator=None):
         self.agent = agent
         self.evaluator = evaluator
         self.judge = judge
+        self.trajectory_evaluator = trajectory_evaluator
 
     async def run_single_test(self, test_case: Dict) -> Dict:
         start_time = time.perf_counter()
@@ -25,11 +25,24 @@ class BenchmarkRunner:
             response["answer"], 
             test_case["expected_answer"]
         )
+        trajectory_scores = (
+            self.trajectory_evaluator.score(response)
+            if self.trajectory_evaluator is not None
+            else {}
+        )
         
         return {
+            "id": test_case.get("id"),
             "test_case": test_case["question"],
+            "case_type": test_case.get("metadata", {}).get("type"),
+            "difficulty": test_case.get("metadata", {}).get("difficulty"),
+            "expected_retrieval_ids": test_case.get("expected_retrieval_ids", []),
+            "retrieved_ids": response.get("retrieved_ids", []),
             "agent_response": response["answer"],
             "latency": latency,
+            "token_usage": response.get("metadata", {}).get("tokens_used", 0),
+            "trace": response.get("trace", []),
+            "trajectory": trajectory_scores,
             "ragas": ragas_scores,
             "judge": judge_result,
             "status": "fail" if judge_result["final_score"] < 3 else "pass"
